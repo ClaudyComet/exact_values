@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exact Value Practice</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f5f7fa;
+        }
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 36px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        #problem-container {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #problem {
+            font-size: 28px;
+        }
+        #answer {
+            margin-top: 20px;
+            min-height: 40px;
+            text-align: center;
+            color: #2980b9;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        button {
+            font-size: 18px;
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        #generate-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        #generate-btn:hover {
+            background-color: #2980b9;
+        }
+        #answer-btn {
+            background-color: #2ecc71;
+            color: white;
+        }
+        #answer-btn:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Exact Value Practice</h1>
+        <div id="problem-container">
+            <div id="problem"></div>
+        </div>
+        <div id="answer"></div>
+        <div class="button-container">
+            <button id="generate-btn" onclick="generateProblem()">New Problem</button>
+            <button id="answer-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+    </div>
+
+    <script>
+        const trigFunctions = ['\\sin', '\\cos', '\\tan', '\\csc', '\\sec', '\\cot'];
+        const angles = [
+            { degree: 0, pi: '0', values: {
+                sin: '0', cos: '1', tan: '0', 
+                csc: 'undefined', sec: '1', cot: 'undefined'
+            }},
+            { degree: 30, pi: '\\frac{\\pi}{6}', values: {
+                sin: '\\frac{1}{2}', cos: '\\frac{\\sqrt{3}}{2}', tan: '\\frac{1}{\\sqrt{3}}',
+                csc: '2', sec: '\\frac{2}{\\sqrt{3}}', cot: '\\sqrt{3}'
+            }},
+            { degree: 45, pi: '\\frac{\\pi}{4}', values: {
+                sin: '\\frac{\\sqrt{2}}{2}', cos: '\\frac{\\sqrt{2}}{2}', tan: '1',
+                csc: '\\sqrt{2}', sec: '\\sqrt{2}', cot: '1'
+            }},
+            { degree: 60, pi: '\\frac{\\pi}{3}', values: {
+                sin: '\\frac{\\sqrt{3}}{2}', cos: '\\frac{1}{2}', tan: '\\sqrt{3}',
+                csc: '\\frac{2}{\\sqrt{3}}', sec: '2', cot: '\\frac{1}{\\sqrt{3}}'
+            }},
+            { degree: 90, pi: '\\frac{\\pi}{2}', values: {
+                sin: '1', cos: '0', tan: 'undefined',
+                csc: '1', sec: 'undefined', cot: '0'
+            }}
+        ];
+
+        let currentProblem = null;
+
+        function generateProblem() {
+            const trigFunction = trigFunctions[Math.floor(Math.random() * trigFunctions.length)];
+            const angle = angles[Math.floor(Math.random() * angles.length)];
+            
+            currentProblem = { trigFunction, angle };
+            
+            const problemElement = document.getElementById('problem');
+            problemElement.innerHTML = `\\[${trigFunction}(${angle.pi}) = \\]`;
+            
+            document.getElementById('answer').innerHTML = '';
+            
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, problemElement]);
+        }
+
+        function showAnswer() {
+            if (!currentProblem) return;
+            
+            const { trigFunction, angle } = currentProblem;
+            const func = trigFunction.substring(1); // Remove the leading backslash
+            const value = angle.values[func];
+            
+            const answerElement = document.getElementById('answer');
+            answerElement.innerHTML = `\\[${value}\\]`;
+            
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, answerElement]);
+        }
+
+        // Generate initial problem
+        generateProblem();
+    </script>
+</body>
+</html>
